@@ -1,0 +1,4 @@
+name: ColorRun
+version: '${project.version}'
+main: me.xap3y.colorrun.Main
+api-version: '1.13'
