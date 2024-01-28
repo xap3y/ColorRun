@@ -1,18 +1,28 @@
 package me.xap3y.colorrun
 
+import me.xap3y.colorrun.api.ArenaPropeties
+import me.xap3y.colorrun.api.cache.ArenasCollection
+import me.xap3y.colorrun.api.cache.PlayerPropetiesCollection
+import me.xap3y.colorrun.api.enums.ArenaStatesEnums
 import me.xap3y.colorrun.commands.ColorRunCMD
+import me.xap3y.colorrun.listeners.PlayerMoveListener
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 import org.incendo.cloud.SenderMapper
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities
 import org.incendo.cloud.execution.ExecutionCoordinator.asyncCoordinator
 import org.incendo.cloud.paper.PaperCommandManager
-import org.slf4j.Logger
+import java.time.LocalDateTime
 
 
 class Main : JavaPlugin() {
     
     val version: String = "1.0.0";
+
+    val playerDb: PlayerPropetiesCollection = PlayerPropetiesCollection()
+
+    val arenasDb: ArenasCollection = ArenasCollection()
 
     val debug: Boolean = false;
     
@@ -22,6 +32,21 @@ class Main : JavaPlugin() {
         val commandManager = createCommandManager()
         val annotationParser = createAnnotationParser(commandManager)
         annotationParser.parse(ColorRunCMD(this))
+
+        Bukkit.getPluginManager().registerEvents(PlayerMoveListener(this), this)
+
+        // Just for debug
+        arenasDb.addArena("test", ArenaPropeties(
+            true,
+            ArenaStatesEnums.WAITING,
+            "test",
+            LocalDateTime.now(),
+            mutableSetOf(),
+            10,
+            2,
+            10,
+            Bukkit.getWorld("world")!!.spawnLocation
+        ))
     }
 
     override fun onDisable() {
