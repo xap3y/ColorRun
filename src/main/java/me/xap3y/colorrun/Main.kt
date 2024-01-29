@@ -46,7 +46,7 @@ class Main : JavaPlugin() {
             Text.console("Registering debug listeners...")
             Bukkit.getPluginManager().registerEvents(DebugListeners(), this)
 
-            Text.console("Creating arena...")
+            Text.console("Creating default arena...")
             arenasDb.addArena("test", ArenaPropeties(
                 true,
                 ArenaStatesEnums.WAITING,
