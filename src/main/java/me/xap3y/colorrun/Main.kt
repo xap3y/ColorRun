@@ -6,6 +6,7 @@ import me.xap3y.colorrun.api.cache.PlayerPropetiesCollection
 import me.xap3y.colorrun.api.enums.ArenaStatesEnums
 import me.xap3y.colorrun.api.text.Text
 import me.xap3y.colorrun.commands.ColorRunCMD
+import me.xap3y.colorrun.hooks.HookManager
 import me.xap3y.colorrun.listeners.DebugListeners
 import me.xap3y.colorrun.listeners.PlayerMoveListener
 import org.bukkit.Bukkit
@@ -26,6 +27,8 @@ class Main : JavaPlugin() {
     val playerDb: PlayerPropetiesCollection = PlayerPropetiesCollection()
 
     val arenasDb: ArenasCollection = ArenasCollection(this)
+
+    private val hookManager: HookManager by lazy { HookManager(this) }
 
     val debug: Boolean = true;
     
@@ -54,6 +57,9 @@ class Main : JavaPlugin() {
                 15,
                 Bukkit.getWorld("world")?.spawnLocation ?: Location(Bukkit.getWorld("world"), 0.0, 25.0, 0.0, 0.0f, 0.0f)
             ))
+
+            Text.console("Hooking PAPI....")
+            hookManager.registerHooks()
         }
     }
 
