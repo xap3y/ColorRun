@@ -9,9 +9,8 @@ import java.util.Date
 data class ArenaPropeties(
     var isReady: Boolean,
     var state: ArenaStatesEnums,
-    val name: String,
-    val createdAt: LocalDateTime,
-    val players: MutableSet<Player>,
+    var createdAt: LocalDateTime,
+    var players: MutableSet<Player>,
     var maxPlayers: Int,
     var minPlayers: Int,
     var startTimeout: Int,

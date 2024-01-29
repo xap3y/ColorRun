@@ -93,9 +93,9 @@ class ColorRunCMD(private val plugin: Main){
     @Permission(CommandPermissions.arenasCommands)
     fun arenaList(commandSender: CommandSender) {
 
-        val arenas: Set<String> = plugin.arenasDb.getArenas().keys.map { it }.toSet()
+        val arenas: Set<String> = plugin.arenasDb.getArenas().map { it.getName() }.toSet() // Converting Set<Arena> to Set<String>
 
-        commandSender.sendMessage(Text.colored("&fList1: &6${arenas.joinToString("&f, ")}"))
+        commandSender.sendMessage(Text.colored("&fList1: &6${arenas.joinToString("&f, &6")}"))
         //commandSender.sendMessage(Text.colored("&fList2: &b$arenas"))
     }
 
@@ -112,15 +112,17 @@ class ColorRunCMD(private val plugin: Main){
             if (plugin.arenasDb.hasArena(param)) return commandSender.sendMessage(Text.colored("&cThis arena already exists!", commandSender is Player))
 
             val location = if (commandSender is Player) commandSender.location else Bukkit.getWorld("world")!!.spawnLocation
-            plugin.arenasDb.addArena(param, ArenaPropeties(
+
+
+
+            plugin.arenasDb.addArena(param, ArenaPropeties(  // Development only
                 false,
                 ArenaStatesEnums.CLOSED,
-                "idk",
                 LocalDateTime.now(),
                 mutableSetOf(),
-                0,
-                0,
-                0,
+                4,
+                1,
+                15,
                 location
             ))
 
@@ -131,6 +133,7 @@ class ColorRunCMD(private val plugin: Main){
             plugin.arenasDb.removeArena(param)
             commandSender.sendMessage(Text.colored("&aArena has been removed!", commandSender is Player))
         }
+        TODO("Be able to edit arenas, set their spawnpoints, etc.")
     }
 
 

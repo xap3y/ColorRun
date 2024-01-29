@@ -4,9 +4,12 @@ import me.xap3y.colorrun.api.ArenaPropeties
 import me.xap3y.colorrun.api.cache.ArenasCollection
 import me.xap3y.colorrun.api.cache.PlayerPropetiesCollection
 import me.xap3y.colorrun.api.enums.ArenaStatesEnums
+import me.xap3y.colorrun.api.text.Text
 import me.xap3y.colorrun.commands.ColorRunCMD
+import me.xap3y.colorrun.listeners.DebugListeners
 import me.xap3y.colorrun.listeners.PlayerMoveListener
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 import org.incendo.cloud.SenderMapper
@@ -24,7 +27,7 @@ class Main : JavaPlugin() {
 
     val arenasDb: ArenasCollection = ArenasCollection()
 
-    val debug: Boolean = false;
+    val debug: Boolean = true;
     
     override fun onEnable() {
         // Plugin startup logic
@@ -35,18 +38,23 @@ class Main : JavaPlugin() {
 
         Bukkit.getPluginManager().registerEvents(PlayerMoveListener(this), this)
 
-        // Just for debug
-        arenasDb.addArena("test", ArenaPropeties(
-            true,
-            ArenaStatesEnums.WAITING,
-            "test",
-            LocalDateTime.now(),
-            mutableSetOf(),
-            10,
-            2,
-            10,
-            Bukkit.getWorld("world")!!.spawnLocation
-        ))
+        if (debug) {
+
+            Text.console("Registering debug listeners...")
+            Bukkit.getPluginManager().registerEvents(DebugListeners(), this)
+
+            Text.console("Creating arena...")
+            arenasDb.addArena("test", ArenaPropeties(
+                true,
+                ArenaStatesEnums.WAITING,
+                LocalDateTime.now(),
+                mutableSetOf(),
+                4,
+                1,
+                15,
+                Bukkit.getWorld("world")?.spawnLocation ?: Location(Bukkit.getWorld("world"), 0.0, 25.0, 0.0, 0.0f, 0.0f)
+            ))
+        }
     }
 
     override fun onDisable() {

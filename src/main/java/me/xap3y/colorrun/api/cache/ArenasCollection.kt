@@ -1,14 +1,15 @@
 package me.xap3y.colorrun.api.cache
 
+import me.xap3y.colorrun.api.Arena
 import me.xap3y.colorrun.api.ArenaPropeties
-import me.xap3y.colorrun.api.enums.ArenaStatesEnums
+import me.xap3y.colorrun.api.events.arena.ArenaCreatedEvent
 
 class ArenasCollection {
 
 
-    private val arenas = HashMap<String, ArenaPropeties>()
+    private val arenas: Set<Arena> = setOf()
 
-    fun getArenas(): HashMap<String, ArenaPropeties> {
+    fun getArenas(): Set<Arena>{
         return arenas
     }
 
@@ -16,24 +17,20 @@ class ArenasCollection {
         return arenas.size
     }
 
-    fun addArena(name: String, arenaPropeties: ArenaPropeties) {
-        arenas[name] = arenaPropeties
+    fun addArena(name: String, propeties: ArenaPropeties) {
+        ArenaCreatedEvent(Arena(name, propeties)).callEvent()
+        arenas.plus(Arena(name, propeties))
     }
 
     fun removeArena(name: String) {
-        if(hasArena(name)) arenas.remove(name)
+        if(hasArena(name)) arenas.minus( getArena(name) )
+    }
+
+    fun getArena(name: String): Arena? {
+        return arenas.find { it.getName() == name }
     }
 
     fun hasArena(name: String): Boolean {
-        return arenas.containsKey(name)
+        return arenas.find { it.getName() == name } != null
     }
-
-    fun getState(name: String): ArenaStatesEnums {
-        return if(hasArena(name)) arenas[name]?.state!! else ArenaStatesEnums.NOT_FOUND
-    }
-
-    fun setState(name: String, state: ArenaStatesEnums) {
-        if(hasArena(name)) arenas[name]?.state = state
-    }
-
 }
