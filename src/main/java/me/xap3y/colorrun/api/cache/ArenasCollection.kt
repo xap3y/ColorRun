@@ -1,13 +1,16 @@
 package me.xap3y.colorrun.api.cache
 
+import me.xap3y.colorrun.Main
 import me.xap3y.colorrun.api.Arena
 import me.xap3y.colorrun.api.ArenaPropeties
 import me.xap3y.colorrun.api.events.arena.ArenaCreatedEvent
+import org.bukkit.Bukkit
 
-class ArenasCollection {
+
+class ArenasCollection(private val plugin: Main) {
 
 
-    private val arenas: Set<Arena> = setOf()
+    private val arenas: MutableSet<Arena> = mutableSetOf()
 
     fun getArenas(): Set<Arena>{
         return arenas
@@ -18,12 +21,19 @@ class ArenasCollection {
     }
 
     fun addArena(name: String, propeties: ArenaPropeties) {
-        ArenaCreatedEvent(Arena(name, propeties)).callEvent()
-        arenas.plus(Arena(name, propeties))
+
+        Bukkit.getScheduler().runTask(plugin, Runnable {
+            val event = ArenaCreatedEvent(Arena(name, propeties))
+            event.callEvent()
+            if (!event.isCancelled) arenas.add(Arena(name, propeties))
+        })
+
+        //plugin.server.pluginManager.callEvent(ArenaCreatedEvent(Arena(name, propeties)))
+        //ArenaCreatedEvent(Arena(name, propeties)).callEvent() WTF?
     }
 
     fun removeArena(name: String) {
-        if(hasArena(name)) arenas.minus( getArena(name) )
+        if(hasArena(name)) arenas.remove( getArena(name) )
     }
 
     fun getArena(name: String): Arena? {

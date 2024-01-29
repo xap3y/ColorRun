@@ -94,8 +94,9 @@ class ColorRunCMD(private val plugin: Main){
     fun arenaList(commandSender: CommandSender) {
 
         val arenas: Set<String> = plugin.arenasDb.getArenas().map { it.getName() }.toSet() // Converting Set<Arena> to Set<String>
+        val size = plugin.arenasDb.arenasSize()
 
-        commandSender.sendMessage(Text.colored("&fList1: &6${arenas.joinToString("&f, &6")}"))
+        commandSender.sendMessage(Text.colored("&fList (&9$size&f): &6${arenas.joinToString("&f, &6")}"))
         //commandSender.sendMessage(Text.colored("&fList2: &b$arenas"))
     }
 
@@ -133,7 +134,6 @@ class ColorRunCMD(private val plugin: Main){
             plugin.arenasDb.removeArena(param)
             commandSender.sendMessage(Text.colored("&aArena has been removed!", commandSender is Player))
         }
-        TODO("Be able to edit arenas, set their spawnpoints, etc.")
     }
 
 

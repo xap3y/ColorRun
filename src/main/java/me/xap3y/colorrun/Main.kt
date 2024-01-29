@@ -25,7 +25,7 @@ class Main : JavaPlugin() {
 
     val playerDb: PlayerPropetiesCollection = PlayerPropetiesCollection()
 
-    val arenasDb: ArenasCollection = ArenasCollection()
+    val arenasDb: ArenasCollection = ArenasCollection(this)
 
     val debug: Boolean = true;
     

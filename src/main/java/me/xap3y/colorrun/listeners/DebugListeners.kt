@@ -10,5 +10,6 @@ class DebugListeners: Listener {
     fun onArenaCreatedEvent(e: ArenaCreatedEvent) {
         Text.console("[onArenaCreatedEvent] Arena created: ${e.arena.getName()}")
         //println("Arena created: ${e.arena.getName()}")
+        //e.isCancelled = true
     }
 }
