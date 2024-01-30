@@ -8,6 +8,7 @@ import me.xap3y.colorrun.api.text.Text
 import me.xap3y.colorrun.commands.ColorRunCMD
 import me.xap3y.colorrun.hooks.HookManager
 import me.xap3y.colorrun.listeners.DebugListeners
+import me.xap3y.colorrun.listeners.PlayerItemHeldListener
 import me.xap3y.colorrun.listeners.PlayerMoveListener
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -40,6 +41,7 @@ class Main : JavaPlugin() {
         annotationParser.parse(ColorRunCMD(this))
 
         Bukkit.getPluginManager().registerEvents(PlayerMoveListener(this), this)
+        Bukkit.getPluginManager().registerEvents(PlayerItemHeldListener(), this)
 
         if (debug) {
 

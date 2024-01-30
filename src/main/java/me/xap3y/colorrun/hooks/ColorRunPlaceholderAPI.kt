@@ -20,7 +20,7 @@ class ColorRunPlaceholderAPI(private val plugin: Main): PlaceholderExpansion() {
             "arenas" -> plugin.arenasDb.arenasSize().toString()
             "wins" -> 0.toString() // TODO
             "loses" -> 0.toString() // TODO
-            "is_ingame" -> plugin.playerDb.getSetting(player.uniqueId.toString(), PlayerCollectionEnums.IN_GAME).toString()
+            "ingame" -> plugin.playerDb.getSetting(player.uniqueId.toString(), PlayerCollectionEnums.IN_GAME)?.toString() ?: false.toString()
             "debug" -> plugin.debug.toString()
             else -> null
         }
