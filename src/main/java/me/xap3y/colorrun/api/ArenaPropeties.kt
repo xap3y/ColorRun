@@ -14,5 +14,6 @@ data class ArenaPropeties(
     var maxPlayers: Int,
     var minPlayers: Int,
     var startTimeout: Int,
-    var spawn: Location
+    var spawn: Location,
+    var maintenance: Boolean = false,
 )

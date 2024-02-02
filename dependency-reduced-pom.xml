@@ -24,6 +24,25 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <relocations>
+            <relocation>
+              <pattern>com.cryptomorin.xseries</pattern>
+              <shadedPattern>my.plugin.utils</shadedPattern>
+            </relocation>
+          </relocations>
+          <filters>
+            <filter>
+              <artifact>*:*</artifact>
+              <excludes>
+                <exclude>com/cryptomorin/xseries/XBiome*</exclude>
+                <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
+                <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
+                <exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
+              </excludes>
+            </filter>
+          </filters>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>

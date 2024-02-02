@@ -20,14 +20,31 @@ class ArenasCollection(private val plugin: Main) {
         return arenas.size
     }
 
-    fun addArena(name: String, propeties: ArenaPropeties) {
+    fun addArena(name: String, propeties: ArenaPropeties) : Boolean {
 
-        Bukkit.getScheduler().runTask(plugin, Runnable {
-            val event = ArenaCreatedEvent(Arena(name, propeties))
-            event.callEvent()
-            if (!event.isCancelled) arenas.add(Arena(name, propeties))
-        })
 
+        if (arenas.any { it.getName() == name }) return false
+
+        /*try {
+            Bukkit.getScheduler().runTask(plugin, Runnable {
+                val event = ArenaCreatedEvent(Arena(name, propeties))
+                event.callEvent()
+                if (!event.isCancelled) arenas.add(Arena(name, propeties))
+            })
+        } catch (e: Exception) {
+            //arenas.add(Arena(name, propeties))
+            try {
+                val event = ArenaCreatedEvent(Arena(name, propeties))
+                event.callEvent()
+                if (!event.isCancelled) arenas.add(Arena(name, propeties))
+            } catch (e: Exception) {
+                // TODO
+            }
+        }*/
+
+        arenas.add(Arena(name, propeties))
+
+        return true
         //plugin.server.pluginManager.callEvent(ArenaCreatedEvent(Arena(name, propeties)))
         //ArenaCreatedEvent(Arena(name, propeties)).callEvent() WTF?
     }

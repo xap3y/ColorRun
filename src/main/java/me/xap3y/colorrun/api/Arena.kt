@@ -71,4 +71,10 @@ class Arena(private val name: String, private var propeties: ArenaPropeties) {
     fun setCreatedAt(createdAt: LocalDateTime) {
         propeties.createdAt = createdAt
     }
+    fun getMaintenanceStatus(): Boolean {
+        return propeties.maintenance
+    }
+    fun setMaintenanceStatus(status: Boolean) {
+        propeties.maintenance = status
+    }
 }

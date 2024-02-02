@@ -1,5 +1,6 @@
 package me.xap3y.colorrun.util
 
+import com.cryptomorin.xseries.XMaterial
 import me.xap3y.colorrun.api.Block
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -10,19 +11,19 @@ class ProcessPlayerLaunch {
     companion object {
 
         private val actionMap: Set<Block> = setOf(
-            Block(Material.LAPIS_BLOCK, Material.LAPIS_LAZULI, 1.2, 1.1),
-            Block(Material.GOLD_BLOCK, Material.GOLD_INGOT, 1.15, 1.15),
-            Block(Material.IRON_BLOCK, Material.IRON_INGOT, 1.1, 1.05),
-            Block(Material.REDSTONE_BLOCK, Material.REDSTONE, 1.3, 1.5),
-            Block(Material.QUARTZ_BLOCK, Material.QUARTZ, 1.4, 0.9),
-            Block(Material.COAL_BLOCK, Material.COAL, 1.2, .05),
-            Block(Material.DIAMOND_BLOCK, Material.DIAMOND, 1.2, 0.15),
-            Block(Material.EMERALD_BLOCK, Material.EMERALD, 3.0, 0.10)
+            Block(Material.LAPIS_BLOCK, XMaterial.LAPIS_LAZULI.parseMaterial(), 1.2, 1.1),
+            Block(Material.GOLD_BLOCK, XMaterial.GOLD_INGOT.parseMaterial(), 1.15, 1.15),
+            Block(Material.IRON_BLOCK, XMaterial.IRON_INGOT.parseMaterial(), 1.1, 1.05),
+            Block(Material.REDSTONE_BLOCK, XMaterial.REDSTONE.parseMaterial(), 1.3, 1.5),
+            Block(Material.QUARTZ_BLOCK, XMaterial.QUARTZ.parseMaterial(), 1.4, 0.9),
+            Block(Material.COAL_BLOCK, XMaterial.COAL.parseMaterial(), 1.2, .05),
+            Block(Material.DIAMOND_BLOCK, XMaterial.DIAMOND.parseMaterial(), 1.2, 0.15),
+            Block(Material.EMERALD_BLOCK, XMaterial.EMERALD.parseMaterial(), 3.0, 0.25)
 
         )
 
         fun processPlayerLaunch(player: Player, block: Material, item: Material? = null) {
-            val handItem = item ?: player.inventory.itemInMainHand.type
+            val handItem = item ?: player.itemInHand.type
 
             actionMap.any{
                 if (it.block == block && it.item == handItem) {

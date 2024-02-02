@@ -4,7 +4,6 @@ import me.xap3y.colorrun.Main
 import me.xap3y.colorrun.api.enums.PlayerCollectionEnums
 import me.xap3y.colorrun.api.text.Text
 import me.xap3y.colorrun.util.ProcessPlayerLaunch.Companion.processPlayerLaunch
-import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
