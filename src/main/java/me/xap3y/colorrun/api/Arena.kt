@@ -2,6 +2,7 @@ package me.xap3y.colorrun.api
 
 import me.xap3y.colorrun.api.enums.ArenaStatesEnums
 import me.xap3y.colorrun.api.events.arena.ArenaStateChangedEvent
+import me.xap3y.colorrun.api.text.Text
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.time.LocalDateTime
@@ -16,12 +17,51 @@ class Arena(private val name: String, private var propeties: ArenaPropeties) {
     fun getPlayers(): MutableSet<Player> {
         return propeties.players
     }
-    fun addPlayer(player: Player) {
+    fun addPlayer(player: Player, notify: Boolean = true) {
+
+        if (notify) propeties.players.forEach { it.sendMessage("&7[&a+&7] &e${player.name}")}
+
         propeties.players.add(player)
+
+        notifyPlayersChange()
     }
-    fun removePlayer(player: Player) {
+
+    fun removePlayer(player: Player, notify: Boolean = true) {
+
         propeties.players.remove(player)
+
+        if (notify) propeties.players.forEach { it.sendMessage("&7[&c-&7] &e${player.name}")}
+
+        notifyPlayersChange()
     }
+
+    private fun notifyPlayersChange() {
+
+        val state: ArenaStatesEnums = getState()
+        val playersSize: Int = getPlayers().size
+
+        if (playersSize < 2) {
+
+            if (state == ArenaStatesEnums.STARTING || state == ArenaStatesEnums.STARTING_FULL) {
+                setState(ArenaStatesEnums.WAITING)
+            } else if (state == ArenaStatesEnums.INGAME) {
+                setState(ArenaStatesEnums.ENDING)
+
+                TODO("IMPLEMENT ENDING")
+            }
+
+        } else if (playersSize >= getMinPlayers() && (state == ArenaStatesEnums.WAITING || state == ArenaStatesEnums.STARTING)) {
+
+            if (playersSize > getMaxPlayers()) Text.console("how?")
+
+            if (playersSize == getMaxPlayers()) setState(ArenaStatesEnums.STARTING_FULL)
+
+            else setState(ArenaStatesEnums.STARTING)
+
+            TODO("IMPLEMENT STARTING")
+        }
+    }
+
     fun getMinPlayers(): Int {
         return propeties.minPlayers
     }

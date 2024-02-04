@@ -10,5 +10,6 @@ enum class ArenaStatesEnums {
     RESTARTING,
     MAINTENANCE,
     HIDDEN,
-    NOT_FOUND
+    NOT_FOUND,
+    ENDING
 }
