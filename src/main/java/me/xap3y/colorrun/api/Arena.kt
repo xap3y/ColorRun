@@ -19,7 +19,7 @@ class Arena(private val name: String, private var propeties: ArenaPropeties) {
     }
     fun addPlayer(player: Player, notify: Boolean = true) {
 
-        if (notify) propeties.players.forEach { it.sendMessage("&7[&a+&7] &e${player.name}")}
+        if (notify) propeties.players.forEach { it.sendMessage(Text.colored("&7[&a+&7] &e${player.name}", true))}
 
         propeties.players.add(player)
 
@@ -30,7 +30,7 @@ class Arena(private val name: String, private var propeties: ArenaPropeties) {
 
         propeties.players.remove(player)
 
-        if (notify) propeties.players.forEach { it.sendMessage("&7[&c-&7] &e${player.name}")}
+        if (notify) propeties.players.forEach { it.sendMessage(Text.colored("&7[&c-&7] &e${player.name}", true))}
 
         notifyPlayersChange()
     }
@@ -40,25 +40,46 @@ class Arena(private val name: String, private var propeties: ArenaPropeties) {
         val state: ArenaStatesEnums = getState()
         val playersSize: Int = getPlayers().size
 
-        if (playersSize < 2) {
+        /*if (playersSize < 2 && false) {
 
             if (state == ArenaStatesEnums.STARTING || state == ArenaStatesEnums.STARTING_FULL) {
                 setState(ArenaStatesEnums.WAITING)
             } else if (state == ArenaStatesEnums.INGAME) {
                 setState(ArenaStatesEnums.ENDING)
 
-                TODO("IMPLEMENT ENDING")
+                //TODO("IMPLEMENT ENDING")
             }
 
-        } else if (playersSize >= getMinPlayers() && (state == ArenaStatesEnums.WAITING || state == ArenaStatesEnums.STARTING)) {
+        } else */
+        if (playersSize >= getMinPlayers() && (state == ArenaStatesEnums.WAITING || state == ArenaStatesEnums.STARTING)) {
 
+            //Text.console("Starting countdown...")
             if (playersSize > getMaxPlayers()) Text.console("how?")
 
-            if (playersSize == getMaxPlayers()) setState(ArenaStatesEnums.STARTING_FULL)
+            if (playersSize == getMaxPlayers()) {
+                setState(ArenaStatesEnums.STARTING_FULL)
+                getPlayers().forEach { it.sendMessage(Text.colored("&fStarting with full player count")) }
+            }
 
-            else setState(ArenaStatesEnums.STARTING)
+            else {
+                if (state == ArenaStatesEnums.STARTING) return
+                setState(ArenaStatesEnums.STARTING)
+                getPlayers().forEach { it.sendMessage(Text.colored("&fCountdown starting..")) }
+                //Text.console("STARTING")
+            }
 
-            TODO("IMPLEMENT STARTING")
+            //TODO("IMPLEMENT STARTING")
+
+        } else if (playersSize < getMaxPlayers() && state == ArenaStatesEnums.STARTING_FULL && playersSize >= getMinPlayers()) {
+
+            setState(ArenaStatesEnums.STARTING)
+            getPlayers().forEach { it.sendMessage(Text.colored("&fNot starting full, but still starting..")) }
+
+        } else if (playersSize < getMinPlayers() && (state == ArenaStatesEnums.STARTING || state == ArenaStatesEnums.STARTING_FULL)) {
+
+            setState(ArenaStatesEnums.WAITING)
+            getPlayers().forEach { it.sendMessage(Text.colored("&fStarting, but player left so not starting anymore..")) }
+
         }
     }
 
@@ -79,7 +100,8 @@ class Arena(private val name: String, private var propeties: ArenaPropeties) {
     }
     fun setState(state: ArenaStatesEnums) {
         propeties.state = state
-        ArenaStateChangedEvent(name, state).callEvent()
+        //ArenaStateChangedEvent(name, state).callEvent()
+        // TODO
     }
     fun isReady(): Boolean {
         return propeties.isReady

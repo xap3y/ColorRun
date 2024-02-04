@@ -124,7 +124,7 @@ class ColorRunCMD(private val plugin: Main){
             if (plugin.arenasDb.addArena(
                 arg1, ArenaPropeties(  // Development only
                     false,
-                    ArenaStatesEnums.CLOSED,
+                    ArenaStatesEnums.WAITING,
                     LocalDateTime.now(),
                     mutableSetOf(),
                     4,
@@ -183,6 +183,85 @@ class ColorRunCMD(private val plugin: Main){
             val maintenanceStatus: Boolean = arena.getMaintenanceStatus()
             arena.setMaintenanceStatus(!maintenanceStatus)
             commandSender.sendMessage(Text.colored("&fMaintenance status was turned ${if (maintenanceStatus) "&cOFF" else "&aON"}", isPlayer))
+        }
+    }
+
+    @Command("colorrun|cr join [arenaName]")
+    @Permission(CommandPermissions.arenasCommands)
+    fun arenaJoin(
+        commandSender: CommandSender,
+        @Argument("arenaName") arenaName: String? = null
+    ) {
+
+        if (commandSender !is Player) return commandSender.sendMessage(Text.colored("&cThis can be only executed as player!", false))
+
+        if (plugin.playerDb.getSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME) == true) {
+            return commandSender.sendMessage(Text.colored("&cYou are already in game!"))
+        }
+
+        if (arenaName == null) {
+
+            plugin.arenasDb.getArenas().find{ it.getState() == ArenaStatesEnums.WAITING || it.getState() == ArenaStatesEnums.STARTING }?.let {
+                it.addPlayer(commandSender)
+                plugin.playerDb.setSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME, true)
+                commandSender.sendMessage(Text.colored("&aYou have been joined to the arena! &7(&c${it.getPlayers().size}&7/&c${it.getMaxPlayers()}&7)"))
+                plugin.playerDb.setArena(commandSender.uniqueId.toString(), it)
+            } ?: commandSender.sendMessage(Text.colored("&cThere is no available arena!", true))
+
+        } else {
+
+            val arena = plugin.arenasDb.getArena(arenaName)
+                ?: return commandSender.sendMessage(Text.colored("&cThis arena doesn't exists!", true))
+            val state = arena.getState()
+
+            when (state) {
+                ArenaStatesEnums.CLOSED -> {
+                    commandSender.sendMessage(Text.colored("&cThis arena is closed!", true))
+                }
+
+                ArenaStatesEnums.WAITING, ArenaStatesEnums.STARTING -> {
+                    arena.addPlayer(commandSender)
+                    plugin.playerDb.setSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME, true)
+                    commandSender.sendMessage(Text.colored("&aYou have joined the arena! &7(&c${arena.getPlayers().size}&7/&c${arena.getMaxPlayers()}&7)"))
+                    plugin.playerDb.setArena(commandSender.uniqueId.toString(), arena)
+                    //TODO("e.isCancelled = true")
+                }
+
+                ArenaStatesEnums.STARTING_FULL -> {
+                    commandSender.sendMessage(Text.colored("&cThis arena is full!", true))
+                }
+
+                ArenaStatesEnums.INGAME -> {
+                    commandSender.sendMessage(Text.colored("&cThis arena is in game!", true))
+                }
+
+                ArenaStatesEnums.ENDING -> {
+                    commandSender.sendMessage(Text.colored("&cThis arena is ending!", true))
+                }
+
+                else -> {
+                    commandSender.sendMessage(Text.colored("&cThis arena is not available!", true))
+                }
+            }
+        }
+    }
+
+    @Command("colorrun|cr quit|leave")
+    @Permission(CommandPermissions.arenasCommands)
+    fun arenaQuit(
+        commandSender: CommandSender
+    ) {
+
+        if (commandSender !is Player) return commandSender.sendMessage(Text.colored("&cThis can be only executed as player!", false))
+
+        if (plugin.playerDb.getSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME) == true) {
+            plugin.playerDb.setSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME, false)
+            val arena = plugin.playerDb.getArena(commandSender.uniqueId.toString()) ?: return commandSender.sendMessage(Text.colored("&cArena not found!", true))
+            arena.removePlayer(commandSender)
+            commandSender.sendMessage(Text.colored("&aYou have left the arena!", true))
+            //TODO("TELEPORT TO LOBBY")
+        } else {
+            commandSender.sendMessage(Text.colored("&cYou are not in game!", true))
         }
     }
 

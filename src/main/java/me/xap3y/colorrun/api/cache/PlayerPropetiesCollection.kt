@@ -1,10 +1,14 @@
 package me.xap3y.colorrun.api.cache
 
+import me.xap3y.colorrun.api.Arena
 import me.xap3y.colorrun.api.enums.PlayerCollectionEnums
 
 class PlayerPropetiesCollection {
 
     private val playerSettings: HashMap<String, HashMap<PlayerCollectionEnums, Boolean>> = HashMap()
+
+    private val playerArenas: HashMap<String, Arena> = HashMap()
+
     fun setSetting(player: String, enum: PlayerCollectionEnums, value: Boolean) {
         if (!playerSettings.containsKey(player)) {
             playerSettings[player] = HashMap()
@@ -18,5 +22,13 @@ class PlayerPropetiesCollection {
 
     fun hasSetting(player: String): Boolean {
         return playerSettings.containsKey(player)
+    }
+
+    fun setArena(uuid: String, arena: Arena) {
+        playerArenas[uuid] = arena
+    }
+
+    fun getArena(uuid: String): Arena? {
+        return playerArenas[uuid]
     }
 }

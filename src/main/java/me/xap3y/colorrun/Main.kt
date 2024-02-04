@@ -54,8 +54,8 @@ class Main : JavaPlugin() {
                 ArenaStatesEnums.WAITING,
                 LocalDateTime.now(),
                 mutableSetOf(),
-                4,
-                1,
+                3,
+                2,
                 15,
                 Bukkit.getWorld("world")?.spawnLocation ?: Location(Bukkit.getWorld("world"), 0.0, 25.0, 0.0, 0.0f, 0.0f)
             ))

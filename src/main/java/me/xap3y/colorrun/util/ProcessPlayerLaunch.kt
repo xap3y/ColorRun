@@ -18,7 +18,8 @@ class ProcessPlayerLaunch {
             Block(Material.QUARTZ_BLOCK, XMaterial.QUARTZ.parseMaterial(), 1.4, 0.9),
             Block(Material.COAL_BLOCK, XMaterial.COAL.parseMaterial(), 1.2, .05),
             Block(Material.DIAMOND_BLOCK, XMaterial.DIAMOND.parseMaterial(), 1.2, 0.15),
-            Block(Material.EMERALD_BLOCK, XMaterial.EMERALD.parseMaterial(), 3.0, 0.25)
+            Block(Material.EMERALD_BLOCK, XMaterial.EMERALD.parseMaterial(), 3.0, 0.25),
+            Block(Material.BRICKS, XMaterial.BRICK.parseMaterial(), 1.0, 0.3)
 
         )
 
