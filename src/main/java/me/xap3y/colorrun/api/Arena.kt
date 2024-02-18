@@ -4,6 +4,7 @@ import me.xap3y.colorrun.Main
 import me.xap3y.colorrun.api.enums.ArenaStatesEnums
 import me.xap3y.colorrun.api.enums.PlayerCollectionEnums
 import me.xap3y.colorrun.api.text.Text
+import me.xap3y.colorrun.util.ActionBar.Companion.sendActionbar
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
@@ -39,7 +40,8 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
                 while(timeout > 0) {
                     getPlayers().forEach {
                         //it.sendMessage("Starting in: $timeout seconds")
-                        it.sendActionBar(Text.colored("&fStarting in: &e$timeout"))
+                        //ActionBarAPI.sendActionBar(it, Text.colored("&fStarting in: &e$timeout"));
+                        sendActionbar(it, Text.colored("&fStarting in: &e$timeout"));
                         //it.sendTitle("", timeout.toString()) // Subtitle only DEPRECATED idk why
                     }
                     timeout--
@@ -167,7 +169,8 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
 
         players.remove(player)
         player.resetTitle()
-        player.sendActionBar(" ")
+        //ActionBarAPI.sendActionBar(player, " ");
+        sendActionbar(player, "");
 
         if (state == ArenaStatesEnums.INGAME) {
             if (notify) players.forEach {
@@ -312,4 +315,6 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
     fun setMaintenanceStatus(status: Boolean) {
         propeties.maintenance = status
     }
+
+
 }
