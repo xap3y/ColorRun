@@ -116,7 +116,7 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
         }
     }
 
-    fun endGame() {
+    fun endGame(player: Player? = null) {
         val state: ArenaStatesEnums = getState()
         if (state != ArenaStatesEnums.INGAME) return
 
@@ -126,7 +126,15 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
         }
 
         setState(ArenaStatesEnums.ENDING)
-        getPlayers().forEach { it.sendTitle(Text.colored("&c&lGame over"), "") }
+
+        if (player != null) getPlayers().forEach {
+            it.sendMessage(Text.colored("&fPlayer &e${player.name}&f has won the game", true))
+        }
+
+        getPlayers().forEach {
+            if (player == it) it.sendTitle(Text.colored("&c&lGame over"), Text.colored("&6&lYou won!"))
+            else it.sendTitle(Text.colored("&c&lGame over"), Text.colored("&cYou lost!"))
+        }
 
         thread(true) {
             Thread.sleep(3000)
@@ -254,7 +262,7 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
 
             // Stopping countdown
             stopTimeout()
-        } else if (state == ArenaStatesEnums.INGAME && playersSize < getMinPlayers()) {
+        } else if (state == ArenaStatesEnums.INGAME && playersSize < 2) {
             endGame()
         }
     }
@@ -291,11 +299,15 @@ class Arena(private val name: String, private var propeties: ArenaPropeties, pri
     fun setPropeties(propeties: ArenaPropeties) {
         this.propeties = propeties
     }
-    fun setMinPlayers(minPlayers: Int) {
+    fun setMinPlayers(minPlayers: Int, saveJson: Boolean = false) {
         propeties.minPlayers = minPlayers
+
+        if (saveJson) plugin.configManager.updateArena(name, "minPlayers", minPlayers)
     }
-    fun setMaxPlayers(maxPlayers: Int) {
+    fun setMaxPlayers(maxPlayers: Int, saveJson: Boolean = false) {
         propeties.maxPlayers = maxPlayers
+
+        if (saveJson) plugin.configManager.updateArena(name, "maxPlayers", maxPlayers)
     }
     fun setStartTimeout(startTimeout: Int) {
         propeties.startTimeout = startTimeout

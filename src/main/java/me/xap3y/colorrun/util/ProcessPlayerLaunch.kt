@@ -1,7 +1,11 @@
 package me.xap3y.colorrun.util
 
 import com.cryptomorin.xseries.XMaterial
+import me.xap3y.colorrun.Main
+import me.xap3y.colorrun.api.Arena
 import me.xap3y.colorrun.api.Block
+import me.xap3y.colorrun.api.enums.ArenaStatesEnums
+import me.xap3y.colorrun.api.enums.PlayerCollectionEnums
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -25,7 +29,16 @@ class ProcessPlayerLaunch {
         )
 
         @JvmStatic
-        fun processPlayerLaunch(player: Player, block: Material, item: Material? = null) {
+        fun processPlayerLaunch(player: Player, block: Material, plugin: Main, item: Material? = null) {
+
+            if (plugin.playerDb.getSetting(player.uniqueId.toString(), PlayerCollectionEnums.IN_GAME) != true) return
+
+            val arena: Arena = plugin.playerDb.getArena(player.uniqueId.toString()) ?: return
+
+            if (arena.getState() != ArenaStatesEnums.INGAME) return
+
+            if (block == XMaterial.OBSIDIAN.parseMaterial()) arena.endGame(player)
+
             val handItem = item ?: player.itemInHand.type
 
             actionMap.any{

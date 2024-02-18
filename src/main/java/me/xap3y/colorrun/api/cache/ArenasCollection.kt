@@ -18,7 +18,7 @@ class ArenasCollection(private val plugin: Main) {
         return arenas.size
     }
 
-    fun addArena(name: String, propeties: ArenaPropeties) : Boolean {
+    fun addArena(name: String, propeties: ArenaPropeties, registerJson: Boolean = false) : Boolean {
 
 
         if (arenas.any { it.getName() == name }) return false
@@ -41,6 +41,20 @@ class ArenasCollection(private val plugin: Main) {
         }*/
 
         arenas.add(Arena(name, propeties, plugin))
+
+        if (registerJson) {
+            plugin.configManager.addArena(me.xap3y.colorrun.util.Arena(
+                name,
+                propeties.minPlayers,
+                propeties.maxPlayers,
+                me.xap3y.colorrun.util.Location(
+                    propeties.spawn.x,
+                    propeties.spawn.y,
+                    propeties.spawn.z,
+                    propeties.spawn.world.name
+                )
+            ))
+        }
 
         return true
         //plugin.server.pluginManager.callEvent(ArenaCreatedEvent(Arena(name, propeties)))

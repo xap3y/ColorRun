@@ -17,7 +17,7 @@ class PlayerMoveListener(private val plugin: Main): Listener {
         val player = e.player
         val block = e.to.block.getRelative(BlockFace.DOWN).type
 
-        processPlayerLaunch(player, block)
+        processPlayerLaunch(player, block, plugin)
 
 
         if (plugin.playerDb.getSetting(player.uniqueId.toString(), PlayerCollectionEnums.EXTENDED_DEBUG_MODE) == true) {
