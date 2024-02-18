@@ -28,6 +28,10 @@ class PlayerPropetiesCollection {
         playerArenas[uuid] = arena
     }
 
+    fun clearArena(uuid: String){
+        playerArenas.remove(uuid)
+    }
+
     fun getArena(uuid: String): Arena? {
         return playerArenas[uuid]
     }

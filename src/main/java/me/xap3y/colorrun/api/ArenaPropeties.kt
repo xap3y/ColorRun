@@ -4,7 +4,6 @@ import me.xap3y.colorrun.api.enums.ArenaStatesEnums
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.time.LocalDateTime
-import java.util.Date
 
 data class ArenaPropeties(
     var isReady: Boolean,
@@ -15,5 +14,6 @@ data class ArenaPropeties(
     var minPlayers: Int,
     var startTimeout: Int,
     var spawn: Location,
+    var waitingLobby: Location,
     var maintenance: Boolean = false,
 )

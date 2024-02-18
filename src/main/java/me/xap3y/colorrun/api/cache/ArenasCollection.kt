@@ -3,8 +3,6 @@ package me.xap3y.colorrun.api.cache
 import me.xap3y.colorrun.Main
 import me.xap3y.colorrun.api.Arena
 import me.xap3y.colorrun.api.ArenaPropeties
-import me.xap3y.colorrun.api.events.arena.ArenaCreatedEvent
-import org.bukkit.Bukkit
 
 
 class ArenasCollection(private val plugin: Main) {
@@ -42,7 +40,7 @@ class ArenasCollection(private val plugin: Main) {
             }
         }*/
 
-        arenas.add(Arena(name, propeties))
+        arenas.add(Arena(name, propeties, plugin))
 
         return true
         //plugin.server.pluginManager.callEvent(ArenaCreatedEvent(Arena(name, propeties)))

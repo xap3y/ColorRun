@@ -10,6 +10,7 @@ import me.xap3y.colorrun.hooks.HookManager
 import me.xap3y.colorrun.listeners.DebugListeners
 import me.xap3y.colorrun.listeners.PlayerItemHeldListener
 import me.xap3y.colorrun.listeners.PlayerMoveListener
+import me.xap3y.colorrun.listeners.PlayerQuitListener
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
@@ -41,6 +42,7 @@ class Main : JavaPlugin() {
         annotationParser.parse(ColorRunCMD(this))
 
         Bukkit.getPluginManager().registerEvents(PlayerMoveListener(this), this)
+        Bukkit.getPluginManager().registerEvents(PlayerQuitListener(this), this)
         Bukkit.getPluginManager().registerEvents(PlayerItemHeldListener(), this)
 
         if (debug) {
@@ -50,14 +52,17 @@ class Main : JavaPlugin() {
 
             Text.console("Creating default arena...")
             arenasDb.addArena("test", ArenaPropeties(
-                true,
-                ArenaStatesEnums.WAITING,
-                LocalDateTime.now(),
-                mutableSetOf(),
-                3,
-                2,
-                15,
-                Bukkit.getWorld("world")?.spawnLocation ?: Location(Bukkit.getWorld("world"), 0.0, 25.0, 0.0, 0.0f, 0.0f)
+                isReady = true,
+                state = ArenaStatesEnums.WAITING,
+                createdAt = LocalDateTime.now(),
+                players = mutableSetOf(),
+                maxPlayers = 3,
+                minPlayers = 2,
+                startTimeout = 15,
+                spawn = Bukkit.getWorld("world")?.spawnLocation
+                    ?: Location(Bukkit.getWorld("world"), 0.0, 25.0, 0.0, 0.0f, 0.0f),
+                waitingLobby = Bukkit.getWorld("world")?.spawnLocation
+                    ?: Location(Bukkit.getWorld("world"), 0.0, 25.0, 0.0, 0.0f, 0.0f)
             ))
 
             Text.console("Hooking PAPI....")
@@ -92,6 +97,10 @@ class Main : JavaPlugin() {
             commandManager,
             CommandSender::class.java
         )
+    }
+
+    fun getInstance(): Main {
+        return this
     }
 
 }

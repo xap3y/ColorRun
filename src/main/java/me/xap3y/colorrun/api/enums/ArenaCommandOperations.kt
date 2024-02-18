@@ -14,5 +14,6 @@ enum class ArenaCommandOperations {
     SETNAME,
     SETSTATE,
     SETREADY,
-    SETMAINTENANCE
+    SETMAINTENANCE,
+    FORCESTART
 }

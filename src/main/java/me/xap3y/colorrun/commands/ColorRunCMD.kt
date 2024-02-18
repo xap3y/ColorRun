@@ -10,6 +10,7 @@ import me.xap3y.colorrun.api.permissions.CommandPermissions
 import me.xap3y.colorrun.api.text.CreateAboutMenu
 import me.xap3y.colorrun.api.text.CreateHelpMenu
 import me.xap3y.colorrun.api.text.Text
+import me.xap3y.colorrun.commands.subcommands.ArenaForceStart.Companion.forceStart
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -112,6 +113,12 @@ class ColorRunCMD(private val plugin: Main){
 
         val isPlayer = commandSender is Player
 
+        when (operation)
+        {
+            ArenaCommandOperations.FORCESTART -> return forceStart(plugin, commandSender, arg1)
+            else -> {}
+        }
+
         if (arg1 == null) return commandSender.sendMessage(Text.colored("&cYou must specify the name of the arena!", isPlayer))
 
         if (operation == ArenaCommandOperations.CREATE) {
@@ -127,9 +134,10 @@ class ColorRunCMD(private val plugin: Main){
                     ArenaStatesEnums.WAITING,
                     LocalDateTime.now(),
                     mutableSetOf(),
-                    4,
-                    1,
+                    3,
+                    2,
                     15,
+                    location,
                     location
                 )
             )) commandSender.sendMessage(Text.colored("&aArena has been created!", isPlayer))
@@ -202,9 +210,10 @@ class ColorRunCMD(private val plugin: Main){
         if (arenaName == null) {
 
             plugin.arenasDb.getArenas().find{ it.getState() == ArenaStatesEnums.WAITING || it.getState() == ArenaStatesEnums.STARTING }?.let {
+                // If arena exist and is join able then let the player
+                commandSender.sendMessage(Text.colored("&fYou have been joined to the arena! &7(&c${it.getPlayers().size + 1}&7/&c${it.getMaxPlayers()}&7)", true))
                 it.addPlayer(commandSender)
                 plugin.playerDb.setSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME, true)
-                commandSender.sendMessage(Text.colored("&aYou have been joined to the arena! &7(&c${it.getPlayers().size}&7/&c${it.getMaxPlayers()}&7)"))
                 plugin.playerDb.setArena(commandSender.uniqueId.toString(), it)
             } ?: commandSender.sendMessage(Text.colored("&cThere is no available arena!", true))
 
@@ -220,9 +229,11 @@ class ColorRunCMD(private val plugin: Main){
                 }
 
                 ArenaStatesEnums.WAITING, ArenaStatesEnums.STARTING -> {
-                    arena.addPlayer(commandSender)
+
                     plugin.playerDb.setSetting(commandSender.uniqueId.toString(), PlayerCollectionEnums.IN_GAME, true)
-                    commandSender.sendMessage(Text.colored("&aYou have joined the arena! &7(&c${arena.getPlayers().size}&7/&c${arena.getMaxPlayers()}&7)"))
+                    commandSender.sendMessage(Text.colored("&fYou have joined the arena! &7(&c${arena.getPlayers().size + 1}&7/&c${arena.getMaxPlayers()}&7)", true))
+
+                    arena.addPlayer(commandSender)
                     plugin.playerDb.setArena(commandSender.uniqueId.toString(), arena)
                     //TODO("e.isCancelled = true")
                 }

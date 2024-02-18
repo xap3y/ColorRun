@@ -10,6 +10,7 @@ class ProcessPlayerLaunch {
 
     companion object {
 
+        @JvmStatic
         private val actionMap: Set<Block> = setOf(
             Block(Material.LAPIS_BLOCK, XMaterial.LAPIS_LAZULI.parseMaterial(), 1.2, 1.1),
             Block(Material.GOLD_BLOCK, XMaterial.GOLD_INGOT.parseMaterial(), 1.15, 1.15),
@@ -23,6 +24,7 @@ class ProcessPlayerLaunch {
 
         )
 
+        @JvmStatic
         fun processPlayerLaunch(player: Player, block: Material, item: Material? = null) {
             val handItem = item ?: player.itemInHand.type
 
@@ -37,6 +39,7 @@ class ProcessPlayerLaunch {
             //launchPlayer(player, 1.2)
         }
 
+        @JvmStatic
         private fun launchPlayer(player: Player, power: Double, y: Double = 1.0) {
 
             val velocity = player.eyeLocation.direction.clone()
